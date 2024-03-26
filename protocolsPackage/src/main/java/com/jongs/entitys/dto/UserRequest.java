@@ -5,7 +5,7 @@ import com.jongs.entitys.User.USER_POLICY;
 public record UserRequest(String login, String password, USER_POLICY policy) {
 
     public static UserRequest fromString(String str) {
-        str = str.replace("{", "").replace("}", "").trim();
+        str = str.replace("{", "").replace("}", "").replace("'", "").trim();
         String[] parts = str.split(",");
         String login = parts[0].split("=")[1].trim();
         String password = parts[1].split("=")[1].trim();

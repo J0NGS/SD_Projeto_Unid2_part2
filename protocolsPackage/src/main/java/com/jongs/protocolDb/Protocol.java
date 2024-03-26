@@ -36,7 +36,7 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceBd
         } else {
             this.database = new ConcurrentHashMap<>();
             User admin = new User(1, "admin", "admin", USER_POLICY.EMPLOYEE);
-            User customer = new User(1, "customer", "customer", USER_POLICY.CUSTOMER);
+            User customer = new User(2, "customer", "customer", USER_POLICY.CUSTOMER);
             this.database.put(admin.getId(), admin);
             this.database.put(customer.getId(), customer);
             try {

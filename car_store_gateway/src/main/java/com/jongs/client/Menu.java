@@ -79,8 +79,9 @@ public class Menu {
                 String password = scn.nextLine();
                 
                 LoginRequest request = new LoginRequest(login, password);
+                String response = server.login(request.toString()); 
 
-                if (server.login(request.toString()).equals("Error, erro na autenticação.")){
+                if (response.equals("Error, erro na autenticação.")){
                     System.out.println("Error, erro na autenticação.");
                 } else {
                     System.out.println("User autenticado");

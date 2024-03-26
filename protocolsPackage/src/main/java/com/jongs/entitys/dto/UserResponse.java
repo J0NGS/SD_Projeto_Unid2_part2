@@ -11,7 +11,7 @@ import com.jongs.entitys.User.USER_POLICY;
 
 
         public static UserResponse fromString(String str) {
-            str = str.replace("{", "").replace("}", "").trim();
+            str = str.replace("{", "").replace("}", "").replace("'", "").trim();
             String[] parts = str.split(",");
             int id = Integer.parseInt(parts[0].split("=")[1].trim());
             String login = parts[1].split("=")[1].trim();

@@ -30,6 +30,9 @@ public class ServerUser implements Runnable{
                 
                 System.out.println("started user service");
                 System.out.println("Waiting for requests...");
+                while (true) {
+                    Thread.sleep(1000); // Aguarda 1 segundo antes de verificar novamente
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

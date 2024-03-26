@@ -6,16 +6,17 @@ import java.rmi.NotBoundException;
 import java.rmi.UnknownHostException;
 import java.util.Scanner;
 
-import com.jongs.protocol.ProtocolInterface;
+import com.jongs.protocolCarStore.ProtocolInterfaceCarStore;
+
 
 public class Client {
     static Scanner scn = new Scanner(System.in);
 
     public static void main(String[] args) throws UnknownHostException, IOException, NotBoundException {
         //definindo endereço do servidor
-        String name = "rmi://localhost:1099/carStore";
+        String name = "rmi://localhost:8081/carStore";
         //Procurando servidor no endereço
-        ProtocolInterface server = (ProtocolInterface) Naming.lookup(name);
+        ProtocolInterfaceCarStore server = (ProtocolInterfaceCarStore) Naming.lookup(name);
         
         int option;
         try {

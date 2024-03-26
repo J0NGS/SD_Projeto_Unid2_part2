@@ -4,13 +4,13 @@ import java.rmi.RemoteException;
 import java.util.Scanner;
 
 import com.jongs.entitys.dto.LoginRequest;
-import com.jongs.protocol.ProtocolInterface;
+import com.jongs.protocolCarStore.ProtocolInterfaceCarStore;
 
 public class Menu {
-    private ProtocolInterface server;
+    private ProtocolInterfaceCarStore server;
 
     // Inicializa o servidor de interação
-    public Menu(ProtocolInterface server) {
+    public Menu(ProtocolInterfaceCarStore server) {
         this.server = server;
     }
 

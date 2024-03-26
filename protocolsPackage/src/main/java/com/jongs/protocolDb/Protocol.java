@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
@@ -19,7 +20,8 @@ import com.jongs.entitys.dto.LoginRequest;
 import com.jongs.entitys.dto.UserRequest;
 import com.jongs.entitys.dto.UserResponse;
 
-public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceBd {
+public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceBd, Serializable{
+    private static final long serialVersionUID = 1L;
     private Map<Integer, User> database;
     private static final String FILE_PATH = "car_store_user_db/src/main/resources/DB.bin";
 

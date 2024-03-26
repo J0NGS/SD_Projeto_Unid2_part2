@@ -7,13 +7,16 @@ import java.io.PrintStream;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
+import com.jongs.protocolDb.Protocol;
+import com.jongs.protocolDb.ProtocolInterfaceBd;
+
 
 
 public class ServerDbUser {
     public static void main(String[] args) throws IOException {
         try {
             //Protocolo implementado
-            ProtocolInterface protocol = new Protocol();
+            ProtocolInterfaceBd protocol = new Protocol();
             //Endereço
             String name = "rmi://localhost/userDb";
             

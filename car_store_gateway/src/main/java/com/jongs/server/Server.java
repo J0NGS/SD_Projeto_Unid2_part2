@@ -7,28 +7,28 @@ import java.io.PrintStream;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
-import com.jongs.protocol.Protocol;
-import com.jongs.protocol.ProtocolInterface;
-import com.jongs.protocol.ProtocolInterfaceUser;
+import com.jongs.protocolCarStore.Protocol;
+import com.jongs.protocolCarStore.ProtocolInterfaceCarStore;
+import com.jongs.protocolUserService.ProtocolInterfaceUserService;
 
 
 public class Server {
     public static void main(String[] args) throws IOException {
         try {
-            String serverUserName = "rmi://localhost:1099/carStoreUser";
+            String serverUserName = "rmi://localhost:8080/carStoreUser";
             String serverCarName = "rmi://localhost:1099/carStoreCar";
             
             //Procurando servidor do db
             System.out.println("try connect in user service...");
-            ProtocolInterfaceUser serverUser = (ProtocolInterfaceUser) Naming.lookup(serverUserName);
+            ProtocolInterfaceUserService serverUser = (ProtocolInterfaceUserService) Naming.lookup(serverUserName);
             System.out.println("connected in user service.");
 
             //Protocolo implementado
-            ProtocolInterface protocol = new Protocol(serverUser);
+            ProtocolInterfaceCarStore protocol = new Protocol(serverUser);
             //Endereço
-            String name = "rmi://localhost/carStore";
+            String name = "rmi://localhost:8081/carStore";
             
-			LocateRegistry.createRegistry(1099);
+			LocateRegistry.createRegistry(8081);
             //Registrando e associando o protocolo
             Naming.rebind(name, protocol);
             

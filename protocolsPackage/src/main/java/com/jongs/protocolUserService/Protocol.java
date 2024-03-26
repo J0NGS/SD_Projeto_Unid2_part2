@@ -1,12 +1,16 @@
 package com.jongs.protocolUserService;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
 import com.jongs.entitys.dto.LoginRequest;
 import com.jongs.entitys.dto.UserRequest;
 import com.jongs.protocolDb.ProtocolInterfaceBd;
 
-public class Protocol implements ProtocolInterfaceUserService{
+public class Protocol implements ProtocolInterfaceUserService, Serializable{
+    private static final long serialVersionUID = 1L;
+    
+    
     private ProtocolInterfaceBd serverDb;
 
 

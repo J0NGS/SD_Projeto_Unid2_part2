@@ -15,8 +15,8 @@ import com.jongs.protocolUserService.ProtocolInterfaceUserService;
 public class Server {
     public static void main(String[] args) throws IOException {
         try {
-            String serverUserName = "rmi://localhost:8080/carStoreUser";
-            String serverCarName = "rmi://localhost:1099/carStoreCar";
+            String serverUserName = "rmi://localhost:8083/carStoreUser";
+            String serverCarName = "rmi://localhost:8084/carStoreCar";
             
             //Procurando servidor do db
             System.out.println("try connect in user service...");
@@ -26,9 +26,9 @@ public class Server {
             //Protocolo implementado
             ProtocolInterfaceCarStore protocol = new Protocol(serverUser);
             //Endereço
-            String name = "rmi://localhost:8081/carStore";
+            String name = "rmi://localhost:8085/carStore";
             
-			LocateRegistry.createRegistry(8081);
+			LocateRegistry.createRegistry(8085);
             //Registrando e associando o protocolo
             Naming.rebind(name, protocol);
             

@@ -1,9 +1,14 @@
 package com.jongs.client;
 
 import java.rmi.RemoteException;
+import java.util.Optional;
 import java.util.Scanner;
 
+import javax.swing.text.html.Option;
+
+import com.jongs.entitys.User.USER_POLICY;
 import com.jongs.entitys.dto.LoginRequest;
+import com.jongs.entitys.dto.UserResponse;
 import com.jongs.protocolCarStore.ProtocolInterfaceCarStore;
 
 public class Menu {
@@ -46,7 +51,7 @@ public class Menu {
     // Metodo para executar instrução de acordo com a opção selecionada
     public void run(int option) throws RemoteException {
         Scanner scn = new Scanner(System.in);
-
+        Optional<UserResponse> user = Optional.empty();
         switch (option) {
             // Exit
             case 0: {
@@ -57,13 +62,18 @@ public class Menu {
             // Login
             case 1: {
                 limpatela();
+                System.out.println(user);
                 break;
             }
             // Update
             case 2: {
                 try {
                     limpatela();
-
+                    if(user.isPresent()){
+                        System.out.println("Usário logado-> " + user.get().login());
+                    }else{
+                        System.out.println("Nenhum usuário logado");
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -84,7 +94,8 @@ public class Menu {
                 if (response.equals("Error, erro na autenticação.")){
                     System.out.println("Error, erro na autenticação.");
                 } else {
-                    System.out.println("User autenticado");
+                    user = Optional.of(UserResponse.fromString(response));
+                    System.out.println(user);
                 }
                 break;
             }

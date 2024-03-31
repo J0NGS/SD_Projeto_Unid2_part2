@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
-import com.jongs.protocolUserDb.Protocol;
-import com.jongs.protocolUserDb.ProtocolInterfaceUserBd;
+import com.jongs.protocolDb.Protocol;
+import com.jongs.protocolDb.ProtocolInterfaceBd;
 
 
 
@@ -14,15 +14,15 @@ public class ServerDbUser {
     public static void main(String[] args) throws IOException {
         try {
             //Protocolo implementado
-            ProtocolInterfaceUserBd protocol = new Protocol();
+            ProtocolInterfaceBd protocol = new Protocol();
             //Endereço
-            String name = "rmi://localhost:8080/userDb";
+            String name = "rmi://localhost:8082/carDb";
             
-			LocateRegistry.createRegistry(8080);
+			LocateRegistry.createRegistry(8082);
             //Registrando e associando o protocolo
             Naming.rebind(name, protocol);
             
-            System.out.println("started user bd");
+            System.out.println("started cars bd");
             System.out.println("Waiting for requests...");
 			
             // Criando um arquivo para redirecionar a saída

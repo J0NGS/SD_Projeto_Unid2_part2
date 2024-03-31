@@ -3,7 +3,7 @@ package com.jongs.server;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
-import com.jongs.protocolDb.ProtocolInterfaceBd;
+import com.jongs.protocolUserDb.ProtocolInterfaceUserBd;
 import com.jongs.protocolUserService.Protocol;
 import com.jongs.protocolUserService.ProtocolInterfaceUserService;
 
@@ -12,17 +12,17 @@ public class ServerUser implements Runnable{
     @Override    
     public void run() {
             try {
-                String serverDbName = "rmi://localhost:1099/userDb";
+                String serverDbName = "rmi://localhost:8080/userDb";
                 //Procurando servidor do db
                 System.out.println("trying connect in server db...");
-                ProtocolInterfaceBd serverDb = (ProtocolInterfaceBd) Naming.lookup(serverDbName);
+                ProtocolInterfaceUserBd serverDb = (ProtocolInterfaceUserBd) Naming.lookup(serverDbName);
                 System.out.println("connected in server db.");
                 
             
                 //Protocolo implementado
                 ProtocolInterfaceUserService protocol = new Protocol(serverDb);
                 //Endereço
-                String name = "rmi://localhost:8080/carStoreUser";
+                String name = "rmi://localhost:8083/carStoreUser";
                 
                 LocateRegistry.createRegistry(8080);
                 //Registrando e associando o protocolo
@@ -31,7 +31,7 @@ public class ServerUser implements Runnable{
                 System.out.println("started user service");
                 System.out.println("Waiting for requests...");
                 while (true) {
-                    Thread.sleep(1000); // Aguarda 1 segundo antes de verificar novamente
+                   Thread.sleep(100); // Aguarda 100ms antes de verificar novamente
                 }
             } catch (Exception e) {
                 e.printStackTrace();

@@ -1,4 +1,4 @@
-package com.jongs.protocolDb;
+package com.jongs.protocolUserDb;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +20,7 @@ import com.jongs.entitys.dto.LoginRequest;
 import com.jongs.entitys.dto.UserRequest;
 import com.jongs.entitys.dto.UserResponse;
 
-public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceBd, Serializable{
+public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceUserBd, Serializable{
     private static final long serialVersionUID = 1L;
     private Map<Integer, User> database;
     private static final String FILE_PATH = "car_store_user_db/src/main/resources/DB.bin";
@@ -29,7 +29,7 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceBd
         File file = new File(FILE_PATH);
         if (file.exists()) {
             try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-                this.database = (Map<Integer, User>) ois.readObject();
+                this.database = (ConcurrentHashMap<Integer, User>) ois.readObject();
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -66,13 +66,13 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceBd
             this.database.put(userEntity.getId(), userEntity);
             try {
                 saveDatabase();
-                return "Create!";
+                return "200,Created";
             } catch (Exception e) {
                 e.printStackTrace();
                 return "Error";
             }
         } else {
-            return "Error, usuário já existente com o mesmo login";
+            return "400,user alreay exists";
         }
             
 
@@ -87,10 +87,10 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceBd
                 return response.toString();
             } catch (Exception e) {
                 e.printStackTrace();
-                return "Error";
+                return "400,Fail convert request";
             }
         } else {
-            return "User not found";
+            return "404,User not found";
         }
     }
 

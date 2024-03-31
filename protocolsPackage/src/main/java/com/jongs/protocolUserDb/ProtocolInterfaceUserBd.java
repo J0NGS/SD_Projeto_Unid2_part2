@@ -1,11 +1,10 @@
-package com.jongs.protocolDb;
+package com.jongs.protocolUserDb;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import com.jongs.entitys.dto.UserRequest;
 
-public interface ProtocolInterfaceBd extends Remote {
+public interface ProtocolInterfaceUserBd extends Remote {
     public String create(String request) throws RemoteException;
     public String read(Integer id) throws RemoteException;
     public String update(Integer id) throws RemoteException;

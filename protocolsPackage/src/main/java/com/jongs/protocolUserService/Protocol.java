@@ -5,16 +5,16 @@ import java.rmi.RemoteException;
 
 import com.jongs.entitys.dto.LoginRequest;
 import com.jongs.entitys.dto.UserRequest;
-import com.jongs.protocolDb.ProtocolInterfaceBd;
+import com.jongs.protocolUserDb.ProtocolInterfaceUserBd;
 
 public class Protocol implements ProtocolInterfaceUserService, Serializable{
     private static final long serialVersionUID = 1L;
     
     
-    private ProtocolInterfaceBd serverDb;
+    private ProtocolInterfaceUserBd serverDb;
 
 
-    public Protocol(ProtocolInterfaceBd serverDb) {
+    public Protocol(ProtocolInterfaceUserBd serverDb) {
         this.serverDb = serverDb;
     }
 

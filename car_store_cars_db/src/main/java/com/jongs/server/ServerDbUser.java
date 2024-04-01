@@ -5,8 +5,9 @@ import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
 
-import com.jongs.protocolDb.Protocol;
-import com.jongs.protocolDb.ProtocolInterfaceBd;
+import com.jongs.protocolCarDb.Protocol;
+import com.jongs.protocolCarDb.ProtocolInterfaceCarBd;
+
 
 
 
@@ -14,7 +15,7 @@ public class ServerDbUser {
     public static void main(String[] args) throws IOException {
         try {
             //Protocolo implementado
-            ProtocolInterfaceBd protocol = new Protocol();
+            ProtocolInterfaceCarBd protocol = new Protocol();
             //Endereço
             String name = "rmi://localhost:8082/carDb";
             

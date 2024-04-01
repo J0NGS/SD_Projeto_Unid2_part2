@@ -116,7 +116,7 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceUs
             UserResponse response = UserResponse.fromUser(user.get());
             return response.toString();
         } else {
-            return "User not found";
+            return "404,User not found";
         }
     }
 
@@ -129,7 +129,7 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceUs
             UserResponse response = UserResponse.fromUser(user.get());
             return response.toString();
         } else {
-            return "User not found";
+            return "404,User not found";
         }
     }
 }

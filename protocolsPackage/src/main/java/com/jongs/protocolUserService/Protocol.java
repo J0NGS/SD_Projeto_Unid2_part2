@@ -33,8 +33,8 @@ public class Protocol implements ProtocolInterfaceUserService, Serializable{
     public String authenticate(String request) throws RemoteException {
         LoginRequest loginRequest = LoginRequest.fromString(request);
         String response = serverDb.searchByLoginAndPassword(loginRequest.toString());
-        if (response.equals("User not found")) {
-            return "Error, usuário não existe.";
+        if (response.equals("404,User not found")) {
+            return "Error, user not found";
         } else {
             return response;
         }

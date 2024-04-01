@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-import com.jongs.entitys.dto.UserResponse;
 import com.jongs.protocolUserService.ProtocolInterfaceUserService;
 
 

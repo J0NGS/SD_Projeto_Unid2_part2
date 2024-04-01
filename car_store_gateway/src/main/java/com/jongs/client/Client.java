@@ -14,7 +14,7 @@ public class Client {
 
     public static void main(String[] args) throws UnknownHostException, IOException, NotBoundException {
         //definindo endereço do servidor
-        String name = "rmi://localhost:8081/carStore";
+        String name = "rmi://localhost:8085/carStore";
         //Procurando servidor no endereço
         ProtocolInterfaceCarStore server = (ProtocolInterfaceCarStore) Naming.lookup(name);
         

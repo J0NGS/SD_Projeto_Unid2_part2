@@ -24,7 +24,7 @@ public class ServerUser implements Runnable{
                 //Endereço
                 String name = "rmi://localhost:8083/carStoreUser";
                 
-                LocateRegistry.createRegistry(8080);
+                LocateRegistry.createRegistry(8083);
                 //Registrando e associando o protocolo
                 Naming.rebind(name, protocol);
                 

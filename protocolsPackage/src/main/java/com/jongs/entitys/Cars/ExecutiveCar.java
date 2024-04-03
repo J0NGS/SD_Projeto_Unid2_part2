@@ -6,7 +6,7 @@ public class ExecutiveCar extends Cars implements Serializable{
     public ExecutiveCar() {
     }
 
-    public ExecutiveCar(int id, String renavam, int yearOfManufacture) {
-        super(id, renavam, CAR_CATEGORY.EXECUTIVE, yearOfManufacture, renavam);
+    public ExecutiveCar(int id, String name,String renavam, int yearOfManufacture) {
+        super(id, name, CAR_CATEGORY.EXECUTIVE, yearOfManufacture, renavam);
     }
 }

@@ -3,15 +3,19 @@ package com.jongs.protocolCarStore;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
+import com.jongs.protocolCarService.ProtocolInterfaceCarService;
 import com.jongs.protocolUserService.ProtocolInterfaceUserService;
 
 
 public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCarStore, Serializable {
     ProtocolInterfaceUserService userService;
+    ProtocolInterfaceCarService carService;
 
-    public Protocol(ProtocolInterfaceUserService userService) throws RemoteException {
+    public Protocol(ProtocolInterfaceUserService userService,ProtocolInterfaceCarService carService) throws RemoteException {
         this.userService = userService;
+        this.carService = carService;
     }
 
     @Override
@@ -22,6 +26,16 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
         } else {
             return response;
         }
+    }
+
+    @Override
+    public String createCar(String car) throws RemoteException {
+        return carService.createCar(car);
+    }
+
+    @Override
+    public List<String> getCars() throws RemoteException {
+        return carService.listAllCarsModel();
     }
 
 }

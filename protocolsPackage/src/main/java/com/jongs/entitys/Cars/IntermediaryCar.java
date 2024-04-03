@@ -6,7 +6,7 @@ public class IntermediaryCar extends Cars implements Serializable{
     public IntermediaryCar() {
     }
 
-    public IntermediaryCar(int id, String renavam, int yearOfManufacture) {
-        super(id, renavam, CAR_CATEGORY.INTERMEDIARY, yearOfManufacture, renavam);
+    public IntermediaryCar(int id, String name,String renavam, int yearOfManufacture) {
+        super(id, name, CAR_CATEGORY.INTERMEDIARY, yearOfManufacture, renavam);
     }
 }

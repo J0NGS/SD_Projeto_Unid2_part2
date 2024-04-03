@@ -162,8 +162,8 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
         }
     }
 
-        @Override
-        public List<String> SearchByName(String nome) throws RemoteException {
+    @Override
+    public List<String> SearchByName(String nome) throws RemoteException {
         List<Cars> foundCars = new ArrayList<>();
 
         // Iterar sobre os valores do mapa de carros
@@ -178,8 +178,8 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
         return response;
     }
 
-        @Override
-        public String SearchByRenavam(String renavam) throws RemoteException {
+    @Override
+    public String SearchByRenavam(String renavam) throws RemoteException {
             Optional<Cars> carFound = Optional.empty();
             
             for (Cars car : database.values()) {
@@ -191,19 +191,19 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
                 return carFound.get().toString();
             else
                 return "404,car not found";
-        }
+    }
 
-        @Override
-        public String addStock(String name, int year, Integer quantity) throws RemoteException {
+    @Override
+    public String addStock(String name, int year, Integer quantity) throws RemoteException {
             if (this.databaseStock.containsKey(name + "-" + year)) {
                 this.databaseStock.put(name + "-" + year, (this.databaseStock.get(name + "-" + year) + quantity));
                 return "200,Cars add";
             } else
                 return "404,Car not found";
-        }
+    }
 
-        @Override
-        public String removeStock(String name, int year, Integer quantity) throws RemoteException {
+    @Override
+    public String removeStock(String name, int year, Integer quantity) throws RemoteException {
             if (this.databaseStock.containsKey(name + "-" + year)) {
                 if (this.databaseStock.get(name + "-" + year) < quantity) {
                     quantity = this.databaseStock.get(name + "-" + year);
@@ -212,6 +212,16 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
                 return "200,Cars removed";
             } else
                 return "404,Car not found";
-        }
-        
+    }
+
+    @Override
+    public List<String> getAll(){
+        List<String> response = database.values().stream().map(Cars::toString).collect(Collectors.toList());
+        return response;
+    }
+
+    @Override
+    public String getAllQuantity(){
+        return databaseStock.toString();
+    }
 }

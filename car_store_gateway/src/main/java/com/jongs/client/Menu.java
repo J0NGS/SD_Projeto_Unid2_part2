@@ -1,6 +1,7 @@
 package com.jongs.client;
 
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -19,11 +20,15 @@ import com.jongs.protocolCarStore.ProtocolInterfaceCarStore;
 public class Menu {
     private ProtocolInterfaceCarStore server;
     private Optional<UserResponse> user;
+    private int optionMenuAdmin;
+    private int optionMenuUser;
 
     // Inicializa o servidor de interação
     public Menu(ProtocolInterfaceCarStore server) {
         this.server = server;
         this.user = Optional.empty();
+        this.optionMenuAdmin = 50;
+        this.optionMenuUser = 50;
     }
 
     // Função para limpar a tela
@@ -65,60 +70,6 @@ public class Menu {
         System.out.println("---------------------------------------");
     }
 
-
-    public void switchCaseAdmin(int optionAdmin){
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Bem vindo!");
-        optionsMenuUser();
-        switch (optionAdmin) {
-            case 1:
-                System.out.println("---------------------------------------");
-                System.out.println("Inserir novo veicúlo");
-                System.out.println("---------------------------------------");
-                System.out.println("Qual o nome do modelo ?");
-                String name = scanner.nextLine();
-                System.out.println("Qual o ano de fabricação do modelo ?");
-                int year = Integer.parseInt(scanner.nextLine());
-                System.out.println("Qual o renavam ?");
-                String renavam = scanner.nextLine();
-                System.out.println("---------------------------------------");
-                System.out.println("Qual a categoria do carro ?");
-                System.out.println("1. Economico");
-                System.out.println("2. Intermediario");
-                System.out.println("Qualquer outro inteiro. Executivo");
-                int category = Integer.parseInt(scanner.nextLine());
-                
-                if (category == 1) {
-                    EconomicCar car = new EconomicCar(0, name, renavam, year);
-                    try {
-                        System.out.println(server.createCar(car.toString()));
-                    } catch (RemoteException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                } if (category == 2) {
-                    IntermediaryCar car = new IntermediaryCar(0, name, renavam, year);
-                    try {
-                        System.out.println(server.createCar(car.toString()));
-                    } catch (RemoteException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                } else {
-                    ExecutiveCar car = new ExecutiveCar(0, name, renavam, year);
-                    try {
-                        System.out.println(server.createCar(car.toString()));
-                    } catch (RemoteException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
     // Metodo para executar instrução de acordo com a opção selecionada
     public void run(int option) throws RemoteException {
         Scanner scn = new Scanner(System.in);
@@ -148,15 +99,49 @@ public class Menu {
                     setUser(Optional.of(UserResponse.fromString(response)));
                     System.out.println("User logado!");
                     System.out.println("---------------------------------------");
-                    int optionLogin = 50;
-                    do {
-                        if (user.get().policy().equals(USER_POLICY.ADMIN)){
+                    
+                    if (user.get().policy().equals(USER_POLICY.EMPLOYEE)) {
+                        optionsMenuAdmin();
+                        optionMenuAdmin = Integer.parseInt(scn.nextLine());
+                        while (optionMenuAdmin != 0) {
+                            switch (optionMenuAdmin) {
+                                case 1:
+                                System.out.println("---------------------------------------");
+                                System.out.println("Qual o modelo do carro? (Marca Nome, Exemplo: Hyundai HB20)");
+                                String carName = scn.nextLine();
+                                System.out.println("Qual o ano de fabricação do carro?");
+                                int carYear = Integer.parseInt(scn.nextLine());
+                                System.out.println("Qual o renavam do carro?");
+                                String carRenavam = scn.nextLine();
+                                System.out.println("Qual a categoria ?");
+                                System.out.println("1. Econômico");
+                                System.out.println("2. Intermediario");
+                                System.out.println("Qualquer outro inteiro. Executivo");
+                                int carCategory = Integer.parseInt(scn.nextLine());
+                                if (carCategory == 1) {
+                                    EconomicCar economicCar = new EconomicCar(0, carName, carRenavam, carYear);
+                                    System.out.println(server.createCar(economicCar.toString()));
+                                }
+                                break;
+                                
+                                case 6:
+                                System.out.println("---------------------------------------");
+                                List<String> allCars = server.getCars();
+                                for (String string : allCars) {
+                                    System.out.println(string);
+                                }
+                                System.out.println("---------------------------------------");
+                                break; 
+                                default:
+                                System.out.println("Opção inválida!!!!!!!!!!!");
+                                break;
+                            }    
                             optionsMenuAdmin();
-                            optionLogin = Integer.getInteger(scn.nextLine());
-                            switchCaseAdmin(optionLogin);                        
+                            optionMenuAdmin = Integer.parseInt(scn.nextLine());
                         }
-                    } while (optionLogin != 0);
-
+                        System.out.println("Até mais!");
+                    } else {
+                    }
                 }
                 break;
             }
@@ -188,8 +173,6 @@ public class Menu {
         }
 
     }
-
-
 
     public ProtocolInterfaceCarStore getServer() {
         return this.server;

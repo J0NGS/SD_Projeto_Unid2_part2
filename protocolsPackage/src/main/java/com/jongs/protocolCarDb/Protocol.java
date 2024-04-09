@@ -101,19 +101,25 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
         int id = database.size() + 1;
 
         Cars car = Cars.fromString(request);
-        car.setId(id);
-
-        database.put(car.getId(), car);
-        databaseStock.put(car.getName()+"-"+ car.getYearOfManufacture(), 1);
-        try {
-            saveDatabase();
-            saveDatabaseStock();
-        } catch (FileNotFoundException e) {
-            return "400,Db not found";
-        } catch (IOException e) {
-            return "400,Car not saved";
+        String carModel = car.getName()+"-"+ car.getYearOfManufacture();
+        if (databaseStock.containsKey(carModel)) {
+            return "409,Model already exists; suggestion: add in stock";
+        } else {
+            car.setId(id);
+    
+    
+            database.put(car.getId(), car);
+            databaseStock.put(carModel, 1);
+            try {
+                saveDatabase();
+                saveDatabaseStock();
+            } catch (FileNotFoundException e) {
+                return "400,Db not found";
+            } catch (IOException e) {
+                return "400,Car not saved";
+            }
+            return "200,Car saved";
         }
-        return "200,Car saved";
     }
 
     @Override
@@ -164,12 +170,12 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
 
     @Override
     public List<String> SearchByName(String nome) throws RemoteException {
-        List<Cars> foundCars = new ArrayList<>();
+        List<String> foundCars = new ArrayList<>();
 
         // Iterar sobre os valores do mapa de carros
-        for (Cars car : database.values()) {
+        for (String car : databaseStock.keySet()) {
             // Verificar se o nome do carro contém a substring desejada
-            if (car.getName().toLowerCase().contains(nome.toLowerCase())) {
+            if (car.toLowerCase().contains(nome.toLowerCase()) && databaseStock.get(car) >= 1) {
                 foundCars.add(car);
             }
         }

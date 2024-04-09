@@ -4,9 +4,9 @@ package com.jongs.server;
 import java.io.IOException;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
-
-import com.jongs.protocolUserDb.Protocol;
 import com.jongs.protocolUserDb.ProtocolInterfaceUserBd;
+import com.jongs.protocolUserDb.Protocol;
+
 
 
 

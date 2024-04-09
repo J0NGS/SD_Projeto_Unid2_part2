@@ -19,14 +19,20 @@ public class Server {
             String serverCarName = "rmi://localhost:8089/carStoreCar";
 
             // Procurando servidor do serviço de usuário
+            System.out.println("-----------------------------------");
+
             System.out.println("try connect in user service...");
             ProtocolInterfaceUserService serverUser = (ProtocolInterfaceUserService) Naming.lookup(serverUserName);
             System.out.println("connected in user service.");
-
+            System.out.println("-----------------------------------");
             // Procurando servidor do serviço de carros
-            System.out.println("try connect in user service...");
+            System.out.println();
+            System.out.println("-----------------------------------");
+            System.out.println("try connect in car service...");
             ProtocolInterfaceCarService serverCar = (ProtocolInterfaceCarService) Naming.lookup(serverCarName);
-            System.out.println("connected in user service.");
+            System.out.println("connected in car service.");
+            System.out.println("-----------------------------------");
+            System.out.println();
 
             // Protocolo implementado
             ProtocolInterfaceCarStore protocol = new Protocol(serverUser, serverCar);

@@ -8,5 +8,6 @@ public interface ProtocolInterfaceCarService extends Remote{
     public String createCar(String car) throws RemoteException;
     public String addCarStock(String car) throws RemoteException;
     public String removeCarStock(String id) throws RemoteException;
-    public List<String> listAllCarsModel() throws RemoteException;
+    public List<String> listAllCars() throws RemoteException;
+    public String listAllCarsModelQuantity() throws RemoteException;
 }

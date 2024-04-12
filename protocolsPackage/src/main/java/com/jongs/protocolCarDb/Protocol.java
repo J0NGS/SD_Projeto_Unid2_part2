@@ -48,7 +48,7 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
             database.put(1, new Cars(1, "Volkswagen Gol", Cars.CAR_CATEGORY.ECONOMIC, 2019, "62945104578"));
             database.put(2, new Cars(2, "Fiat Palio", Cars.CAR_CATEGORY.ECONOMIC, 2018, "78023658914"));
             database.put(3, new Cars(3,"Renault Kwid", Cars.CAR_CATEGORY.ECONOMIC, 2020, "32015478632"));
-            database.put(11, new Cars(11,"Hyundai Creta", Cars.CAR_CATEGORY.ECONOMIC, 2022, ""));
+            database.put(11, new Cars(11,"Hyundai Creta", Cars.CAR_CATEGORY.ECONOMIC, 2022, "31498478656"));
             
             this.databaseStock.put("Volkswagen Gol-2019", 1);
             this.databaseStock.put("Fiat Palio-2018", 1);
@@ -220,7 +220,7 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
 
     @Override
     public String addStock(String request) throws RemoteException {
-        int id = database.size() + 1;
+        int id = generateUniqueId();
 
         Cars car = Cars.fromString(request);
         String carModel = car.getName()+"-"+ car.getYearOfManufacture();
@@ -251,7 +251,7 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
             if(parts[0].equals("200")){
                 return "200,car removed";
             } else {
-                return "Error-> Operate delete. Message: " + parts[1];
+                return "400,Error-> Operate delete. Message: " + parts[1];
             }
         } else {
             return "404,car not found";

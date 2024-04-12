@@ -35,7 +35,22 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
 
     @Override
     public List<String> getCars() throws RemoteException {
-        return carService.listAllCarsModel();
+        return carService.listAllCars();
+    }
+
+    @Override
+    public String getModels() throws RemoteException {
+        return carService.listAllCarsModelQuantity();
+    }
+
+    @Override
+    public String addStock(String car) throws RemoteException {
+        return carService.addCarStock(car);
+    }
+
+    @Override
+    public String removeStock(String id) throws RemoteException {
+        return carService.removeCarStock(id);
     }
 
 }

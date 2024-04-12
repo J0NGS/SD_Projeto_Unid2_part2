@@ -36,7 +36,7 @@ public class Protocol implements ProtocolInterfaceCarService, Serializable {
     }
 
     @Override
-    public String removeCarStock(String car) throws RemoteException {
+    public String removeCarStock(String id) throws RemoteException {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'removeCarStock'");
     }

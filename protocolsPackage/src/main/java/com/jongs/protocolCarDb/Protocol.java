@@ -14,10 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import com.jongs.entitys.Cars.Cars;
+import com.jongs.entitys.dto.CarListResponse;
 
 
 public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCarBd, Serializable {
@@ -48,30 +50,30 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
             database.put(3, new Cars(3,"Renault Kwid", Cars.CAR_CATEGORY.ECONOMIC, 2020, "32015478632"));
             database.put(11, new Cars(11,"Hyundai Creta", Cars.CAR_CATEGORY.ECONOMIC, 2022, ""));
             
-            this.databaseStock.put("Volkswagen Gol-2019", 10);
-            this.databaseStock.put("Fiat Palio-2018", 10);
-            this.databaseStock.put("Renault Kwid-2020", 10);
-            this.databaseStock.put("Hyundai Creta-2022", 10);
+            this.databaseStock.put("Volkswagen Gol-2019", 1);
+            this.databaseStock.put("Fiat Palio-2018", 1);
+            this.databaseStock.put("Renault Kwid-2020", 1);
+            this.databaseStock.put("Hyundai Creta-2022", 1);
             // Carros Intermediários
             database.put(4, new Cars(4,"Ford Focus", Cars.CAR_CATEGORY.INTERMEDIARY, 2018,"95687420135"));
             database.put(5, new Cars(5,"Honda City", Cars.CAR_CATEGORY.INTERMEDIARY, 2016, "41032659874"));
             database.put(6, new Cars(6,"Toyota Yaris", Cars.CAR_CATEGORY.INTERMEDIARY, 2019, "58740123659"));
             database.put(10, new Cars(10,"Chevrolet Prisma", Cars.CAR_CATEGORY.INTERMEDIARY, 2018, "12036548795"));
 
-            this.databaseStock.put("Ford Focus-2018", 10);
-            this.databaseStock.put("Honda City-2016", 10);
-            this.databaseStock.put("Toyota Yaris-2019", 10);
-            this.databaseStock.put("Chevrolet Prisma-2018", 10);
+            this.databaseStock.put("Ford Focus-2018", 1);
+            this.databaseStock.put("Honda City-2016", 1);
+            this.databaseStock.put("Toyota Yaris-2019", 1);
+            this.databaseStock.put("Chevrolet Prisma-2018", 1);
             // Carros Executivos
             database.put(7, new Cars(7, "Mercedes-Benz C-Class", Cars.CAR_CATEGORY.EXECUTIVE, 2021, "89456230147"));
             database.put(8, new Cars(8, "BMW 5 Series", Cars.CAR_CATEGORY.EXECUTIVE, 2020, "96587430215"));
             database.put(9, new Cars(9, "Audi A6", Cars.CAR_CATEGORY.EXECUTIVE, 2019,"20136589470"));
             database.put(12, new Cars(12, "Nissan Sentra", Cars.CAR_CATEGORY.EXECUTIVE, 2017, "47589630124"));
 
-            this.databaseStock.put("Mercedes-Benz C-Class-2021", 10);
-            this.databaseStock.put("BMW 5 Series-2020", 10);
-            this.databaseStock.put("Audi A6-2019", 10);
-            this.databaseStock.put("Nissan Sentra-2017", 10);
+            this.databaseStock.put("Mercedes-Benz C-Class-2021", 1);
+            this.databaseStock.put("BMW 5 Series-2020", 1);
+            this.databaseStock.put("Audi A6-2019", 1);
+            this.databaseStock.put("Nissan Sentra-2017", 1);
 
             try {
                 saveDatabase();
@@ -98,8 +100,10 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
 
     @Override
     public String create(String request) throws RemoteException {
-        int id = database.size() + 1;
-
+        int id = generateUniqueId();
+        while (database.containsKey(id)) {
+            id = generateUniqueId();
+        }
         Cars car = Cars.fromString(request);
         String carModel = car.getName()+"-"+ car.getYearOfManufacture();
         if (databaseStock.containsKey(carModel)) {
@@ -138,10 +142,25 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
         try {
             
             Cars entityUpdate = Cars.fromString(str);
+            Cars oldCar = database.get(id);
+            String entityModel = entityUpdate.getName() + "-" + entityUpdate.getYearOfManufacture();
+            String oldCarModel = oldCar.getName() + "-" + oldCar.getYearOfManufacture();
             entityUpdate.setId(id);
             try {
                 database.put(entityUpdate.getId(), entityUpdate);
+                if (!(oldCarModel.equals(entityModel))) {
+                    int quantityOldCar = databaseStock.get(oldCarModel);
+                    int quantityNewModel = databaseStock.get(entityModel);
+
+                    quantityOldCar--;
+                    quantityNewModel++;
+
+                    databaseStock.put(oldCarModel, quantityOldCar);
+                    databaseStock.put(entityModel, quantityNewModel);
+                    saveDatabaseStock();
+                }
                 saveDatabase();
+
                 return "200,Updated";
             } catch (Exception e) {
                 e.printStackTrace();
@@ -157,7 +176,8 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
     public String delete(Integer id) throws RemoteException {
         try {
             Cars entity = database.get(id);
-            databaseStock.remove(entity.getName() + "-" + entity.getYearOfManufacture());
+            int quantity = databaseStock.get(entity.getName() + "-" + entity.getYearOfManufacture());
+            databaseStock.put(entity.getName() + "-" + entity.getYearOfManufacture(), quantity - 1);
             database.remove(id);
             saveDatabase();
             saveDatabaseStock();
@@ -169,19 +189,18 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
     }
 
     @Override
-    public List<String> SearchByName(String nome) throws RemoteException {
-        List<String> foundCars = new ArrayList<>();
-
+    public String SearchByName(String name) throws RemoteException {
+        List<CarListResponse> foundCars = new ArrayList<>(); 
         // Iterar sobre os valores do mapa de carros
-        for (String car : databaseStock.keySet()) {
+        for (Cars car : database.values()) {
             // Verificar se o nome do carro contém a substring desejada
-            if (car.toLowerCase().contains(nome.toLowerCase()) && databaseStock.get(car) >= 1) {
-                foundCars.add(car);
+            if (car.getName().toLowerCase().contains(name.toLowerCase())) {
+                String carName = car.getName() + "-" + car.getYearOfManufacture();
+                CarListResponse response = new CarListResponse(carName, databaseStock.get(carName));
+                foundCars.add(response);
             }
         }
-
-        List<String> response = foundCars.stream().map(Cars::toString).collect(Collectors.toList());
-        return response;
+        return foundCars.toString();
     }
 
     @Override
@@ -200,24 +219,43 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
     }
 
     @Override
-    public String addStock(String name, int year, Integer quantity) throws RemoteException {
-            if (this.databaseStock.containsKey(name + "-" + year)) {
-                this.databaseStock.put(name + "-" + year, (this.databaseStock.get(name + "-" + year) + quantity));
-                return "200,Cars add";
-            } else
-                return "404,Car not found";
+    public String addStock(String request) throws RemoteException {
+        int id = database.size() + 1;
+
+        Cars car = Cars.fromString(request);
+        String carModel = car.getName()+"-"+ car.getYearOfManufacture();
+        if (!(databaseStock.containsKey(carModel))) {
+            return "404,Model dont exist";
+        } else {
+            car.setId(id);
+    
+            database.put(car.getId(), car);
+            databaseStock.put(carModel, (databaseStock.get(carModel) + 1));
+            try {
+                saveDatabase();
+                saveDatabaseStock();
+            } catch (FileNotFoundException e) {
+                return "400,Db not found";
+            } catch (IOException e) {
+                return "400,Car not saved";
+            }
+            return "200,Car saved";
+        }
     }
 
     @Override
-    public String removeStock(String name, int year, Integer quantity) throws RemoteException {
-            if (this.databaseStock.containsKey(name + "-" + year)) {
-                if (this.databaseStock.get(name + "-" + year) < quantity) {
-                    quantity = this.databaseStock.get(name + "-" + year);
-                }
-                this.databaseStock.put(name + "-" + year, (this.databaseStock.get(name + "-" + year) - quantity));
-                return "200,Cars removed";
-            } else
-                return "404,Car not found";
+    public String removeStock(String id) throws RemoteException {
+        if (database.containsKey(id)) {        
+            String respose = delete(Integer.getInteger(id));
+            String [] parts = respose.split(",");
+            if(parts[0].equals("200")){
+                return "200,car removed";
+            } else {
+                return "Error-> Operate delete. Message: " + parts[1];
+            }
+        } else {
+            return "404,car not found";
+        }
     }
 
     @Override
@@ -229,5 +267,15 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
     @Override
     public String getAllQuantity(){
         return databaseStock.toString();
+    }
+
+
+    private static int generateUniqueId() {
+        UUID uuid = UUID.randomUUID();
+        int hash = uuid.hashCode();
+        int positiveHash = Math.abs(hash);
+        int maxLimit = (int) Math.pow(10, 5);
+        int limitedHash = positiveHash % maxLimit;
+        return limitedHash;
     }
 }

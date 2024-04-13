@@ -18,18 +18,22 @@ public class Client {
         //Procurando servidor no endereço
         ProtocolInterfaceCarStore server = (ProtocolInterfaceCarStore) Naming.lookup(name);
         
-        int option;
+        int option = 50;
         try {
-            //Inicializando a classe Menu
+            //Inicioializando a classe Menu
             Menu menu = new Menu(server);
             do {
                 //Exibindo menu de opções
                 menu.optionsLogin();
-                option = scn.nextInt();
-                //Executando a opção
-                menu.run(option);
+                try {
+                    option = Integer.parseInt(scn.nextLine());
+                    menu.run(option);
+
+                } catch (NumberFormatException e) {
+                    System.out.println("Formato de entrada inválido!!!!!");
+                }
             } while (option != 0);
-        } catch (Exception e) {
+        }catch(Exception e){
             e.printStackTrace();
         }
     }

@@ -45,30 +45,30 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
             this.database = new ConcurrentHashMap<>();
             this.databaseStock = new ConcurrentHashMap<>();
             // Carros Econômicos
-            database.put(1, new Cars(1, "Volkswagen Gol", Cars.CAR_CATEGORY.ECONOMIC, 2019, "62945104578"));
-            database.put(2, new Cars(2, "Fiat Palio", Cars.CAR_CATEGORY.ECONOMIC, 2018, "78023658914"));
-            database.put(3, new Cars(3,"Renault Kwid", Cars.CAR_CATEGORY.ECONOMIC, 2020, "32015478632"));
-            database.put(11, new Cars(11,"Hyundai Creta", Cars.CAR_CATEGORY.ECONOMIC, 2022, "31498478656"));
+            database.put(1, new Cars(1, "Volkswagen Gol", Cars.CAR_CATEGORY.ECONOMIC, 2019, 44000.00F,"62945104578"));
+            database.put(2, new Cars(2, "Fiat Palio", Cars.CAR_CATEGORY.ECONOMIC, 2018, 38000.00F,"78023658914"));
+            database.put(3, new Cars(3,"Renault Kwid", Cars.CAR_CATEGORY.ECONOMIC,2020, 48000.00F,"32015478632"));
+            database.put(11, new Cars(11,"Hyundai Creta", Cars.CAR_CATEGORY.ECONOMIC, 2022, 630000.00F,"31498478656"));
             
             this.databaseStock.put("Volkswagen Gol-2019", 1);
             this.databaseStock.put("Fiat Palio-2018", 1);
             this.databaseStock.put("Renault Kwid-2020", 1);
             this.databaseStock.put("Hyundai Creta-2022", 1);
             // Carros Intermediários
-            database.put(4, new Cars(4,"Ford Focus", Cars.CAR_CATEGORY.INTERMEDIARY, 2018,"95687420135"));
-            database.put(5, new Cars(5,"Honda City", Cars.CAR_CATEGORY.INTERMEDIARY, 2016, "41032659874"));
-            database.put(6, new Cars(6,"Toyota Yaris", Cars.CAR_CATEGORY.INTERMEDIARY, 2019, "58740123659"));
-            database.put(10, new Cars(10,"Chevrolet Prisma", Cars.CAR_CATEGORY.INTERMEDIARY, 2018, "12036548795"));
+            database.put(4, new Cars(4,"Ford Focus", Cars.CAR_CATEGORY.INTERMEDIARY, 2018, 69000.00F,"95687420135"));
+            database.put(5, new Cars(5,"Honda City", Cars.CAR_CATEGORY.INTERMEDIARY, 2016, 64000.00F,"41032659874"));
+            database.put(6, new Cars(6,"Toyota Yaris", Cars.CAR_CATEGORY.INTERMEDIARY, 2019, 68000.00F,"58740123659"));
+            database.put(10, new Cars(10,"Chevrolet Prisma", Cars.CAR_CATEGORY.INTERMEDIARY, 2018, 64000.00F,"12036548795"));
 
             this.databaseStock.put("Ford Focus-2018", 1);
             this.databaseStock.put("Honda City-2016", 1);
             this.databaseStock.put("Toyota Yaris-2019", 1);
             this.databaseStock.put("Chevrolet Prisma-2018", 1);
             // Carros Executivos
-            database.put(7, new Cars(7, "Mercedes-Benz C-Class", Cars.CAR_CATEGORY.EXECUTIVE, 2021, "89456230147"));
-            database.put(8, new Cars(8, "BMW 5 Series", Cars.CAR_CATEGORY.EXECUTIVE, 2020, "96587430215"));
-            database.put(9, new Cars(9, "Audi A6", Cars.CAR_CATEGORY.EXECUTIVE, 2019,"20136589470"));
-            database.put(12, new Cars(12, "Nissan Sentra", Cars.CAR_CATEGORY.EXECUTIVE, 2017, "47589630124"));
+            database.put(7, new Cars(7, "Mercedes-Benz C-Class", Cars.CAR_CATEGORY.EXECUTIVE, 2021, 84500.00F,"89456230147"));
+            database.put(8, new Cars(8, "BMW 5 Series", Cars.CAR_CATEGORY.EXECUTIVE, 2020, 92800.00F,"96587430215"));
+            database.put(9, new Cars(9, "Audi A6", Cars.CAR_CATEGORY.EXECUTIVE, 2019,79000.00F,"20136589470"));
+            database.put(12, new Cars(12, "Nissan Sentra", Cars.CAR_CATEGORY.EXECUTIVE, 2017, 73000.00F,"47589630124"));
 
             this.databaseStock.put("Mercedes-Benz C-Class-2021", 1);
             this.databaseStock.put("BMW 5 Series-2020", 1);

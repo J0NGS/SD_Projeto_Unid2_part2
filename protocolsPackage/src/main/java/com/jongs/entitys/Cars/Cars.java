@@ -10,6 +10,7 @@ public class Cars implements Serializable {
     private String name;
     private CAR_CATEGORY category;
     private int yearOfManufacture;
+    private float price;
     private String renavam;
 
     public enum CAR_CATEGORY {
@@ -20,13 +21,15 @@ public class Cars implements Serializable {
     public Cars() {
     }
 
-    public Cars(int id, String name, CAR_CATEGORY category, int yearOfManufacture, String renavam) {
+    public Cars(int id, String name, CAR_CATEGORY category, int yearOfManufacture, float price,String renavam) {
         this.id = id;
         this.name = name;
         this.category = category;
         this.yearOfManufacture = yearOfManufacture;
+        this.price = price;
         this.renavam = renavam;
     }
+
 
     public int getId() {
         return this.id;
@@ -60,6 +63,14 @@ public class Cars implements Serializable {
         this.yearOfManufacture = yearOfManufacture;
     }
 
+    public float getPrice() {
+        return this.price;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
     public String getRenavam() {
         return this.renavam;
     }
@@ -88,6 +99,11 @@ public class Cars implements Serializable {
         return this;
     }
 
+    public Cars price(float price) {
+        setPrice(price);
+        return this;
+    }
+
     public Cars renavam(String renavam) {
         setRenavam(renavam);
         return this;
@@ -101,12 +117,12 @@ public class Cars implements Serializable {
             return false;
         }
         Cars cars = (Cars) o;
-        return id == cars.id && Objects.equals(name, cars.name) && Objects.equals(category, cars.category) && yearOfManufacture == cars.yearOfManufacture && Objects.equals(renavam, cars.renavam);
+        return id == cars.id && Objects.equals(name, cars.name) && Objects.equals(category, cars.category) && yearOfManufacture == cars.yearOfManufacture && price == cars.price && Objects.equals(renavam, cars.renavam);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, category, yearOfManufacture, renavam);
+        return Objects.hash(id, name, category, yearOfManufacture, price, renavam);
     }
 
     @Override
@@ -116,9 +132,11 @@ public class Cars implements Serializable {
             ", name='" + getName() + "'" +
             ", category='" + getCategory() + "'" +
             ", yearOfManufacture='" + getYearOfManufacture() + "'" +
+            ", price='" + getPrice() + "'" +
             ", renavam='" + getRenavam() + "'" +
             "}";
     }
+    
 
 
     public static Cars fromString(String str) {
@@ -128,8 +146,9 @@ public class Cars implements Serializable {
         String name = parts[1].split("=")[1].trim();
         CAR_CATEGORY category = CAR_CATEGORY.valueOf(parts[2].split("=")[1].trim());
         int year = Integer.parseInt(parts[3].split("=")[1].trim());
-        String renavam = parts[4].split("=")[1].trim();
-        return new Cars(id, name, category, year, renavam);
+        float price = Float.parseFloat(parts[4].split("=")[1].trim());
+        String renavam = parts[5].split("=")[1].trim();
+        return new Cars(id, name, category, year, price,renavam);
     }
 
 }

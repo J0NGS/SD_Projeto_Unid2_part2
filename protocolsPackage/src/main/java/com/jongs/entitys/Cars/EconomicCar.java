@@ -6,7 +6,7 @@ public class EconomicCar extends Cars implements Serializable{
     public EconomicCar() {
     }
 
-    public EconomicCar(int id, String name,String renavam, int yearOfManufacture) {
-        super(id, name, CAR_CATEGORY.ECONOMIC, yearOfManufacture, renavam);
+    public EconomicCar(int id, String name,String renavam, float price,int yearOfManufacture) {
+        super(id, name, CAR_CATEGORY.ECONOMIC, yearOfManufacture, price,renavam);
     }
 }

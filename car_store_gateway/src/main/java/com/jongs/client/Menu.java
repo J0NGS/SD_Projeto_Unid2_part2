@@ -102,7 +102,7 @@ public class Menu {
                     System.out.println("User logado!");
                     System.out.println("---------------------------------------");
 
-                    /*USUÁRIO EMPLYEE LOGADO */
+                    /* USUÁRIO EMPLYEE LOGADO */
                     if (user.get().policy().equals(USER_POLICY.EMPLOYEE)) {
                         optionsMenuAdmin();
                         optionMenuAdmin = Integer.parseInt(scn.nextLine());
@@ -121,15 +121,20 @@ public class Menu {
                                     System.out.println("2. Intermediario");
                                     System.out.println("Qualquer outro inteiro. Executivo");
                                     int carCategory = Integer.parseInt(scn.nextLine());
+                                    System.out.println("---------------------------------------");
+                                    System.out.println("Qual o valor do carro? EX: 50000.00(cinquenta mil))");
+                                    float carPrice = Float.valueOf(scn.nextLine());
                                     if (carCategory == 1) {
-                                        EconomicCar economicCar = new EconomicCar(0, carName, carRenavam, carYear);
+                                        EconomicCar economicCar = new EconomicCar(0, carName, carRenavam, carPrice,
+                                                carYear);
                                         System.out.println(server.createCar(economicCar.toString()));
                                     } else if (carCategory == 2) {
                                         IntermediaryCar intermediaryCar = new IntermediaryCar(0, carName, carRenavam,
-                                                carYear);
+                                                carPrice, carYear);
                                         System.out.println(server.createCar(intermediaryCar.toString()));
                                     } else {
-                                        ExecutiveCar executiveCar = new ExecutiveCar(0, carName, carRenavam, carYear);
+                                        ExecutiveCar executiveCar = new ExecutiveCar(0, carName, carRenavam, carPrice,
+                                                carYear);
                                         System.out.println(server.createCar(executiveCar.toString()));
 
                                     }
@@ -148,18 +153,20 @@ public class Menu {
                                     System.out.println("2. Intermediario");
                                     System.out.println("Qualquer outro inteiro. Executivo");
                                     int carAddCategory = Integer.parseInt(scn.nextLine());
+                                    System.out.println("Qual o valor do carro? EX: 50000.00(cinquenta mil))");
+                                    float carAddPrice = Float.valueOf(scn.nextLine());
                                     if (carAddCategory == 1) {
                                         EconomicCar economicCar = new EconomicCar(0, carAddName, carAddRenavam,
-                                                carAddYear);
+                                                carAddPrice, carAddYear);
                                         System.out.println(server.addStock(economicCar.toString()));
                                     } else if (carAddCategory == 2) {
                                         IntermediaryCar intermediaryCar = new IntermediaryCar(0, carAddName,
                                                 carAddRenavam,
-                                                carAddYear);
+                                                carAddPrice, carAddYear);
                                         System.out.println(server.addStock(intermediaryCar.toString()));
                                     } else {
                                         ExecutiveCar executiveCar = new ExecutiveCar(0, carAddName, carAddRenavam,
-                                                carAddYear);
+                                                carAddPrice, carAddYear);
                                         System.out.println(server.addStock(executiveCar.toString()));
 
                                     }
@@ -187,21 +194,23 @@ public class Menu {
                                         System.out.println("2. Intermediario");
                                         System.out.println("Qualquer outro inteiro. Executivo");
                                         int carUpdateCategory = Integer.parseInt(scn.nextLine());
+                                        System.out.println("Qual o valor do carro? EX: 50000.00(cinquenta mil))");
+                                        float carUpdatePrice = Float.valueOf(scn.nextLine());
                                         if (carUpdateCategory == 1) {
                                             EconomicCar economicCar = new EconomicCar(0, carUpdateName,
                                                     carUpdateRenavam,
-                                                    carUpdateYear);
-                                            System.out.println(server.update(carIdUpdate,economicCar.toString()));
+                                                    carUpdatePrice, carUpdateYear);
+                                            System.out.println(server.update(carIdUpdate, economicCar.toString()));
                                         } else if (carUpdateCategory == 2) {
                                             IntermediaryCar intermediaryCar = new IntermediaryCar(0, carUpdateName,
                                                     carUpdateRenavam,
-                                                    carUpdateYear);
-                                            System.out.println(server.update(carIdUpdate,intermediaryCar.toString()));
+                                                    carUpdatePrice, carUpdateYear);
+                                            System.out.println(server.update(carIdUpdate, intermediaryCar.toString()));
                                         } else {
                                             ExecutiveCar executiveCar = new ExecutiveCar(0, carUpdateName,
                                                     carUpdateRenavam,
-                                                    carUpdateYear);
-                                            System.out.println(server.update(carIdUpdate,executiveCar.toString()));
+                                                    carUpdatePrice, carUpdateYear);
+                                            System.out.println(server.update(carIdUpdate, executiveCar.toString()));
 
                                         }
                                     }
@@ -260,7 +269,70 @@ public class Menu {
                             optionMenuAdmin = Integer.parseInt(scn.nextLine());
                         }
                         System.out.println("Até mais!");
-                    } else {
+                    } else if (user.get().policy().equals(USER_POLICY.CUSTOMER)) {
+                        optionsMenuUser();
+                        optionMenuUser = Integer.parseInt(scn.nextLine());
+                        while (optionMenuUser != 0) {
+                            switch (optionMenuUser) {
+                                case 1:
+                                    System.out.println("---------------------------------------");
+                                    System.out.println("Qual o id do carro que você deseja comprar?");
+                                    String idCarPuchased = scn.nextLine();
+                                    System.out.println("---------------------------------------");
+                                    System.out.println(server.readCar(idCarPuchased));
+                                    System.out.println("---------------------------------------");
+                                    if (!(server.readCar(idCarPuchased).contains("404"))) {
+                                        System.out.println("Carro comprado!!!!!!");
+                                        server.removeStock(idCarPuchased);
+                                    }
+                                    break;
+                                case 2:
+                                    System.out.println("---------------------------------------");
+                                    System.out.println("Qual o renavam do carro que você deseja buscar?");
+                                    String carUserRenavamSearch = scn.nextLine();
+                                    System.out.println("---------------------------------------");
+                                    System.out.println(server.searchCarByRenavam(carUserRenavamSearch));
+                                    System.out.println("---------------------------------------");
+                                    break;
+                                case 3:
+                                    System.out.println("---------------------------------------");
+                                    System.out.println("Qual o nome do carro que você deseja buscar?");
+                                    String carUserNameSearch = scn.nextLine();
+                                    System.out.println("---------------------------------------");
+                                    System.out.println("RESULTADOS...");
+                                    System.out.println("---------------------------------------");
+                                    for (String resultsOffNameSearch : server.searchCarByName(carUserNameSearch)) {
+                                        System.out.println();
+                                        System.out.println(resultsOffNameSearch);
+                                        System.out.println();
+                                    }
+                                    System.out.println("---------------FIM---------------------");
+                                    break;
+                                case 4:
+                                    System.out.println("---------------------------------------");
+                                    List<String> allCars = server.getCars();
+                                    for (String string : allCars) {
+                                        System.out.println(string);
+                                    }
+                                    System.out.println("---------------------------------------");
+                                    break;
+
+                                case 5:
+                                    System.out.println("---------------------------------------");
+                                    for (String responseModels : server.getModels()) {
+                                        System.out.println(responseModels);
+                                    }
+                                    System.out.println();
+                                    System.out.println("---------------------------------------");
+                                    break;
+                                default:
+                                    System.out.println("Opção inválida!!!!!!!!!!!");
+                                    break;
+                            }
+                            optionsMenuUser();
+                            optionMenuUser = Integer.parseInt(scn.nextLine());
+                        }
+                        System.out.println("Até mais!");
                     }
                 }
                 break;

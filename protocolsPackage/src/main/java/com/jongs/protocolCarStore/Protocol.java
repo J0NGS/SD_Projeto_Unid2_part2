@@ -20,12 +20,7 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
 
     @Override
     public String login(String login) throws RemoteException {
-        String response = userService.authenticate(login);
-        if (response.equals("Error, usuário não existe.")) {
-            return "Error, erro na autenticação.";
-        } else {
-            return response;
-        }
+        return userService.authenticate(login);
     }
 
     @Override
@@ -39,7 +34,7 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
     }
 
     @Override
-    public String getModels() throws RemoteException {
+    public List<String> getModels() throws RemoteException {
         return carService.listAllCarsModelQuantity();
     }
 
@@ -51,6 +46,26 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
     @Override
     public String removeStock(String id) throws RemoteException {
         return carService.removeCarStock(id);
+    }
+
+    @Override
+    public List<String> searchCarByName(String name) throws RemoteException {
+        return carService.listCarsByName(name);
+    }
+
+    @Override
+    public String update(String id, String car) throws RemoteException {
+        return carService.updateCar(id, car);
+    }
+
+    @Override
+    public String readCar(String id) throws RemoteException {
+        return carService.readCar(id);
+    }
+
+    @Override
+    public String searchCarByRenavam(String renavam) throws RemoteException {
+        return carService.searchCarByRenavam(renavam);
     }
 
 }

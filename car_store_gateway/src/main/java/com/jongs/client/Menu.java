@@ -13,6 +13,7 @@ import com.jongs.entitys.Cars.EconomicCar;
 import com.jongs.entitys.Cars.ExecutiveCar;
 import com.jongs.entitys.Cars.IntermediaryCar;
 import com.jongs.entitys.User.USER_POLICY;
+import com.jongs.entitys.dto.CarListResponse;
 import com.jongs.entitys.dto.LoginRequest;
 import com.jongs.entitys.dto.UserResponse;
 import com.jongs.protocolCarStore.ProtocolInterfaceCarStore;
@@ -93,14 +94,15 @@ public class Menu {
 
                 LoginRequest request = new LoginRequest(login, password);
                 String response = server.login(request.toString());
-
-                if (response.equals("Error, erro na autenticação.")) {
-                    System.out.println("Error, erro na autenticação.");
+                String parts[] = response.split(",");
+                if (parts[0].equals("404")) {
+                    System.out.println(parts[1]);
                 } else {
                     setUser(Optional.of(UserResponse.fromString(response)));
                     System.out.println("User logado!");
                     System.out.println("---------------------------------------");
 
+                    /*USUÁRIO EMPLYEE LOGADO */
                     if (user.get().policy().equals(USER_POLICY.EMPLOYEE)) {
                         optionsMenuAdmin();
                         optionMenuAdmin = Integer.parseInt(scn.nextLine());
@@ -147,19 +149,93 @@ public class Menu {
                                     System.out.println("Qualquer outro inteiro. Executivo");
                                     int carAddCategory = Integer.parseInt(scn.nextLine());
                                     if (carAddCategory == 1) {
-                                        EconomicCar economicCar = new EconomicCar(0, carAddName, carAddRenavam, carAddYear);
+                                        EconomicCar economicCar = new EconomicCar(0, carAddName, carAddRenavam,
+                                                carAddYear);
                                         System.out.println(server.addStock(economicCar.toString()));
                                     } else if (carAddCategory == 2) {
-                                        IntermediaryCar intermediaryCar = new IntermediaryCar(0, carAddName, carAddRenavam,
+                                        IntermediaryCar intermediaryCar = new IntermediaryCar(0, carAddName,
+                                                carAddRenavam,
                                                 carAddYear);
                                         System.out.println(server.addStock(intermediaryCar.toString()));
                                     } else {
-                                        ExecutiveCar executiveCar = new ExecutiveCar(0, carAddName, carAddRenavam, carAddYear);
+                                        ExecutiveCar executiveCar = new ExecutiveCar(0, carAddName, carAddRenavam,
+                                                carAddYear);
                                         System.out.println(server.addStock(executiveCar.toString()));
 
                                     }
                                     break;
+                                case 3:
+                                    System.out.println("---------------------------------------");
+                                    System.out.println("Qual o id do carro que você deseja editar?");
+                                    String carIdUpdate = scn.nextLine();
+                                    System.out.println("---------------------------------------");
+                                    if (server.readCar(carIdUpdate).equals("404,car not found")) {
+                                        System.out.println("Carro com id não encontrado");
+                                        break;
+                                    } else {
+                                        System.out.println(server.readCar(carIdUpdate));
+                                        System.out.println("==========ATUALIZAÇÃO=========");
+                                        System.out
+                                                .println("Qual o modelo do carro? (Marca Nome, Exemplo: Hyundai HB20)");
+                                        String carUpdateName = scn.nextLine();
+                                        System.out.println("Qual o ano de fabricação do carro?");
+                                        int carUpdateYear = Integer.parseInt(scn.nextLine());
+                                        System.out.println("Qual o renavam do carro?");
+                                        String carUpdateRenavam = scn.nextLine();
+                                        System.out.println("Qual a categoria ?");
+                                        System.out.println("1. Econômico");
+                                        System.out.println("2. Intermediario");
+                                        System.out.println("Qualquer outro inteiro. Executivo");
+                                        int carUpdateCategory = Integer.parseInt(scn.nextLine());
+                                        if (carUpdateCategory == 1) {
+                                            EconomicCar economicCar = new EconomicCar(0, carUpdateName,
+                                                    carUpdateRenavam,
+                                                    carUpdateYear);
+                                            System.out.println(server.update(carIdUpdate,economicCar.toString()));
+                                        } else if (carUpdateCategory == 2) {
+                                            IntermediaryCar intermediaryCar = new IntermediaryCar(0, carUpdateName,
+                                                    carUpdateRenavam,
+                                                    carUpdateYear);
+                                            System.out.println(server.update(carIdUpdate,intermediaryCar.toString()));
+                                        } else {
+                                            ExecutiveCar executiveCar = new ExecutiveCar(0, carUpdateName,
+                                                    carUpdateRenavam,
+                                                    carUpdateYear);
+                                            System.out.println(server.update(carIdUpdate,executiveCar.toString()));
+
+                                        }
+                                    }
+                                    break;
+                                case 4:
+                                    System.out.println("---------------------------------------");
+                                    System.out.println("Qual o renavam do carro que você deseja buscar?");
+                                    String carRenavamSearch = scn.nextLine();
+                                    System.out.println("---------------------------------------");
+                                    System.out.println(server.searchCarByRenavam(carRenavamSearch));
+                                    System.out.println("---------------------------------------");
+                                    break;
+                                case 5:
+                                    System.out.println("---------------------------------------");
+                                    System.out.println("Qual o nome do carro que você deseja buscar?");
+                                    String carNameSearch = scn.nextLine();
+                                    System.out.println("---------------------------------------");
+                                    System.out.println("RESULTADOS...");
+                                    System.out.println("---------------------------------------");
+                                    for (String resultsOffNameSearch : server.searchCarByName(carNameSearch)) {
+                                        System.out.println();
+                                        System.out.println(resultsOffNameSearch);
+                                        System.out.println();
+                                    }
+                                    System.out.println("---------------FIM---------------------");
+                                    break;
                                 case 6:
+                                    System.out.println("---------------------------------------");
+                                    System.out.println("Qual o id do carro que você deseja remover?");
+                                    System.out.println();
+                                    System.out.println(server.removeStock(scn.nextLine()));
+                                    System.out.println("---------------------------------------");
+                                    break;
+                                case 7:
                                     System.out.println("---------------------------------------");
                                     List<String> allCars = server.getCars();
                                     for (String string : allCars) {
@@ -167,14 +243,17 @@ public class Menu {
                                     }
                                     System.out.println("---------------------------------------");
                                     break;
+
+                                case 8:
+                                    System.out.println("---------------------------------------");
+                                    for (String responseModels : server.getModels()) {
+                                        System.out.println(responseModels);
+                                    }
+                                    System.out.println();
+                                    System.out.println("---------------------------------------");
+                                    break;
                                 default:
                                     System.out.println("Opção inválida!!!!!!!!!!!");
-                                    break;
-
-                                case 7:
-                                    System.out.println("---------------------------------------");
-                                    System.out.println(server.getModels());
-                                    System.out.println("---------------------------------------");
                                     break;
                             }
                             optionsMenuAdmin();

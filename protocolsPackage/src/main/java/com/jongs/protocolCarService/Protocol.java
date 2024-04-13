@@ -63,10 +63,41 @@ public class Protocol implements ProtocolInterfaceCarService, Serializable {
     }
 
     @Override
-    public String listAllCarsModelQuantity() throws RemoteException {
-       return serverBd.getAllQuantity();
+    public List<String> listAllCarsModelQuantity() throws RemoteException {
+       return serverBd.getAllWithQuantity();
     }
 
-    
-    
+    @Override
+    public List<String> listCarsByName(String name) throws RemoteException {
+        return serverBd.SearchByName(name);
+    }
+
+    @Override
+    public String updateCar(String id, String car) throws RemoteException{
+        int idInt = Integer.parseInt(id);
+        String response = serverBd.update(idInt, car);
+        String parts[] = response.split(",");
+        if (parts[0].equals("200")) {
+            return "Car updated!";
+        } else {
+            return "Error-> message: " + parts[1];
+        }
+    }
+
+    @Override
+    public String readCar(String id) throws RemoteException {
+        int idInt = Integer.parseInt(id);
+        return serverBd.read(idInt);
+    }
+
+    @Override
+    public String searchCarByRenavam(String renavam) throws RemoteException {
+        String response = serverBd.SearchByRenavam(renavam);
+        String parts[] = response.split(",");
+        if (parts[0].equals("404")) {
+            return "Error-> message: " + parts[1];
+        } else {
+            return response;
+        }    
+    }
 }

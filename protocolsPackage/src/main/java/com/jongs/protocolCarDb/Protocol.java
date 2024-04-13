@@ -133,7 +133,7 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
             Cars response = car.get();
             return response.toString();
         } else {
-            return "400,User not found";
+            return "404,car not found";
         }
     }
 
@@ -147,20 +147,20 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
             String oldCarModel = oldCar.getName() + "-" + oldCar.getYearOfManufacture();
             entityUpdate.setId(id);
             try {
-                database.put(entityUpdate.getId(), entityUpdate);
                 if (!(oldCarModel.equals(entityModel))) {
-                    int quantityOldCar = databaseStock.get(oldCarModel);
-                    int quantityNewModel = databaseStock.get(entityModel);
-
-                    quantityOldCar--;
-                    quantityNewModel++;
-
-                    databaseStock.put(oldCarModel, quantityOldCar);
-                    databaseStock.put(entityModel, quantityNewModel);
+                    delete(id);
+                    
+                    if (databaseStock.containsKey(entityModel)) {
+                        int quantityNewModel = databaseStock.get(entityModel);
+                        quantityNewModel++;
+                        databaseStock.put(entityModel, quantityNewModel);
+                    }else{
+                        databaseStock.put(entityModel, 1);
+                    }
+                    database.put(entityUpdate.getId(), entityUpdate);
                     saveDatabaseStock();
                 }
                 saveDatabase();
-
                 return "200,Updated";
             } catch (Exception e) {
                 e.printStackTrace();
@@ -178,6 +178,9 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
             Cars entity = database.get(id);
             int quantity = databaseStock.get(entity.getName() + "-" + entity.getYearOfManufacture());
             databaseStock.put(entity.getName() + "-" + entity.getYearOfManufacture(), quantity - 1);
+            if (databaseStock.get(entity.getName() + "-" + entity.getYearOfManufacture()) == 0) {
+                databaseStock.remove(entity.getName() + "-" + entity.getYearOfManufacture());
+            }
             database.remove(id);
             saveDatabase();
             saveDatabaseStock();
@@ -189,18 +192,16 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
     }
 
     @Override
-    public String SearchByName(String name) throws RemoteException {
-        List<CarListResponse> foundCars = new ArrayList<>(); 
+    public List<String> SearchByName(String name) throws RemoteException {
+        List<String> foundCars = new ArrayList<>(); 
         // Iterar sobre os valores do mapa de carros
         for (Cars car : database.values()) {
             // Verificar se o nome do carro contém a substring desejada
             if (car.getName().toLowerCase().contains(name.toLowerCase())) {
-                String carName = car.getName() + "-" + car.getYearOfManufacture();
-                CarListResponse response = new CarListResponse(carName, databaseStock.get(carName));
-                foundCars.add(response);
+                foundCars.add(car.toString());
             }
         }
-        return foundCars.toString();
+        return foundCars;
     }
 
     @Override
@@ -245,8 +246,9 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
 
     @Override
     public String removeStock(String id) throws RemoteException {
-        if (database.containsKey(id)) {        
-            String respose = delete(Integer.getInteger(id));
+        int idInt = Integer.parseInt(id);
+        if (database.containsKey(idInt)) {        
+            String respose = delete(idInt);
             String [] parts = respose.split(",");
             if(parts[0].equals("200")){
                 return "200,car removed";
@@ -265,8 +267,16 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
     }
 
     @Override
-    public String getAllQuantity(){
-        return databaseStock.toString();
+    public List<String> getAllWithQuantity(){
+        List<String> response = new ArrayList<>();
+        int quantity = 0;
+        for (String keys : databaseStock.keySet()) {
+            quantity+= databaseStock.get(keys);
+            CarListResponse carResponse = new CarListResponse(keys, databaseStock.get(keys));
+            response.add(carResponse.toString());
+        }
+        response.add("TOTAL DE CARROS: " + quantity);
+        return response;
     }
 
 

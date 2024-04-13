@@ -31,13 +31,7 @@ public class Protocol implements ProtocolInterfaceUserService, Serializable{
 
     @Override
     public String authenticate(String request) throws RemoteException {
-        LoginRequest loginRequest = LoginRequest.fromString(request);
-        String response = serverDb.searchByLoginAndPassword(loginRequest.toString());
-        if (response.equals("404,User not found")) {
-            return "Error, user not found";
-        } else {
-            return response;
-        }
+        return serverDb.searchByLoginAndPassword(request);
     }
 
 

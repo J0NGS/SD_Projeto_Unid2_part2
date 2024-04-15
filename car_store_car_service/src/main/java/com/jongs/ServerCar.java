@@ -6,11 +6,17 @@ import java.rmi.registry.LocateRegistry;
 import com.jongs.protocolCarDb.ProtocolInterfaceCarBd;
 import com.jongs.protocolCarService.Protocol;
 import com.jongs.protocolCarService.ProtocolInterfaceCarService;
+import com.jongs.protocolUserDb.ProtocolInterfaceUserBd;
 
 
 public class ServerCar implements Runnable{
+    private static final String serverDbName = "rmi://localhost:8082/carDb";
+    private static final String name = "rmi://localhost:8089/carStoreCar"; 
+    private boolean connected = false;
+
     @Override    
     public void run() {
+        while (true) {
             try {
 
                 System.out.println("\r\n" + //
@@ -23,19 +29,26 @@ public class ServerCar implements Runnable{
                                         "                                                                                                            \r\n" + //
                                         "");
                 System.out.println("--------------------------------------------");
-                String serverDbName = "rmi://localhost:8082/carDb";
-                //Procurando servidor do db
                 System.out.println("trying connect in server car db...");
-                ProtocolInterfaceCarBd serverDb = (ProtocolInterfaceCarBd) Naming.lookup(serverDbName);
-                System.out.println("connected in server car db.");
+                
+                ProtocolInterfaceCarBd serverDb = null;
+                while (!connected) {
+                    try {
+                        serverDb = (ProtocolInterfaceCarBd) Naming.lookup(serverDbName);
+                        System.out.println("connected in server car db.");
+                        connected = true;
+                    } catch (Exception e) {
+                        System.out.println("Failed to connect to the server db. Retrying in 1 second...");
+                        Thread.sleep(1000); // Aguarda 5 segundos antes de tentar novamente
+                    }
+                    
+                }
                 System.out.println("--------------------------------------------");
                 
             
                 //Protocolo implementado
                 ProtocolInterfaceCarService protocol = new Protocol(serverDb);
                 //Endereço
-                String name = "rmi://localhost:8089/carStoreCar";
-                
                 LocateRegistry.createRegistry(8089);
                 //Registrando e associando o protocolo
                 Naming.rebind(name, protocol);
@@ -44,20 +57,29 @@ public class ServerCar implements Runnable{
                 System.out.println("Waiting for requests...");
                 System.out.println("--------------------------------------------");
                 while (true) {
-                   Thread.sleep(100); // Aguarda 100ms antes de verificar novamente
+                    try {
+                        serverDb.ping();
+                    } catch (Exception e) {
+                        System.out.println("Failed to connect to the server db. Retrying in 1 seconds...");
+                        connected = false;
+                        while (!connected) {
+                            try {
+                                serverDb = (ProtocolInterfaceCarBd) Naming.lookup(serverDbName);
+                                protocol = new Protocol(serverDb);
+                                connected = true;
+                                Naming.rebind(name, protocol);
+                                System.out.println("Connected to the server db.");
+                            } catch (Exception e2) {
+                                System.out.println("Failed to connect to the server db. Retrying in 1 second...");
+                                Thread.sleep(1000); // Aguarda 5 segundos antes de tentar novamente
+                            }
+                        }
+                    }
+                    Thread.sleep(100); // Aguarda 100ms antes de verificar novamente
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-			
-            // Criando um arquivo para redirecionar a saída
-            //File logFile = new File("car_store_user_bd/src/main/resources/DB_Log.txt");
-            //PrintStream printStream = new PrintStream(new FileOutputStream(logFile));
-            
-            // Redirecionando a saída padrão
-            //System.setOut(printStream); 
-            
-            //System.out.println("started...");
-            //System.out.println("Waiting for requests...");
+        }
     }
 }

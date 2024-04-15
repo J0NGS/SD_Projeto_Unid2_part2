@@ -14,4 +14,5 @@ public interface ProtocolInterfaceCarService extends Remote{
     public List<String> listAllCarsModelQuantity() throws RemoteException;
     public List<String> listCarsByName(String name) throws RemoteException;
     public String searchCarByRenavam(String renavam) throws RemoteException;
+    public boolean ping() throws RemoteException;
 }

@@ -23,7 +23,7 @@ import com.jongs.entitys.dto.UserResponse;
 public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceUserBd, Serializable{
     private static final long serialVersionUID = 1L;
     private Map<Integer, User> database;
-    private static final String FILE_PATH = "car_store_user_db/src/main/resources/DB.bin";
+    private static final String FILE_PATH = "car_store_user_db/src/main/resources/UserDB.bin";
 
     public Protocol() throws RemoteException {
         File file = new File(FILE_PATH);
@@ -131,5 +131,10 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceUs
         } else {
             return "404,User not found";
         }
+    }
+
+    @Override
+    public boolean ping() throws RemoteException {
+        return true;
     }
 }

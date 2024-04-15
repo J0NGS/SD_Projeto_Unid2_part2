@@ -16,5 +16,6 @@ public interface ProtocolInterfaceCarBd extends Remote {
     public String delete(Integer id) throws RemoteException;
     public String addStock(String request) throws RemoteException;
     public String removeStock(String id) throws RemoteException;
+    public boolean ping() throws RemoteException;
 }
 

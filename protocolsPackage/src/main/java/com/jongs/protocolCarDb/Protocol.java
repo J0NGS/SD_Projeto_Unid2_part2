@@ -26,8 +26,8 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
     private static final long serialVersionUID = 1L;
     private Map<Integer, Cars> database;
     private Map<String, Integer> databaseStock;
-    private static final String FILE_PATH = "car_store_cars_db/src/main/resources/DB.bin";
-    private static final String FILE_STOCK_PATH = "car_store_cars_db/src/main/resources/DBStock.bin";
+    private static final String FILE_PATH = "car_store_cars_db/src/main/resources/CarDB.bin";
+    private static final String FILE_STOCK_PATH = "car_store_cars_db/src/main/resources/CarStockDB.bin";
 
     public Protocol() throws RemoteException {
         File file = new File(FILE_PATH);
@@ -287,5 +287,10 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
         int maxLimit = (int) Math.pow(10, 5);
         int limitedHash = positiveHash % maxLimit;
         return limitedHash;
+    }
+
+    @Override
+    public boolean ping() throws RemoteException {
+        return true;
     }
 }

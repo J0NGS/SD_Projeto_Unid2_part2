@@ -21,7 +21,7 @@ public class CarStoreClient {
             System.out.println("Digite o ip do servidor. Exemplo: 10.0.0.157");
             String ipServer = scn.nextLine();
             try {
-                String name = "rmi://"+ ipServer +"8085/carStore";
+                String name = "rmi://"+ ipServer +":8085/carStore";
                 server = (ProtocolInterfaceCarStore) Naming.lookup(name);
                 connection = true;
             } catch (Exception e) {

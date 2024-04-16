@@ -87,14 +87,14 @@ public class CarStoreServer {
 
             while (true) {
                 try {
-                    serverCar = (ProtocolInterfaceCarService) Naming.lookup(serverCarName);
+                    serverCar = (ProtocolInterfaceCarService) Naming.lookup("rmi://" + serverCarName + ":8089/carStoreCar");
                 } catch (Exception e) {
                     System.out.println("Failed to connect to the server service. Retrying in 1 seconds...");
                     connectCarService = false;
                     while (!connectCarService) {
                         try {
                             System.out.println("try connect in car service...");
-                            serverCar = (ProtocolInterfaceCarService) Naming.lookup(serverCarName);
+                            serverCar = (ProtocolInterfaceCarService) Naming.lookup("rmi://" + serverCarName + ":8089/carStoreCar");
                             protocol = new Protocol(serverUser, serverCar);
                             connectCarService = true;
                             Naming.rebind(name, protocol);
@@ -105,14 +105,14 @@ public class CarStoreServer {
                     }
                 }
                 try {
-                    serverUser = (ProtocolInterfaceUserService) Naming.lookup(serverUserName);
+                    serverUser = (ProtocolInterfaceUserService) Naming.lookup("rmi://" + serverUserName +":8083/carStoreUser");
                 } catch (Exception e) {
                     System.out.println("Failed to connect to the server service. Retrying in 1 seconds...");
                     connectUserService = false;
                     while (!connectUserService) {
                         try {
                             System.out.println("try connect in user service...");
-                            serverUser = (ProtocolInterfaceUserService) Naming.lookup(serverUserName);
+                            serverUser = (ProtocolInterfaceUserService) Naming.lookup("rmi://" + serverUserName +":8083/carStoreUser");
                             protocol = new Protocol(serverUser, serverCar);
                             connectUserService = true;
                             Naming.rebind(name, protocol);

@@ -8,6 +8,7 @@ import java.rmi.ConnectException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.util.Scanner;
 
 import com.jongs.protocolCarService.ProtocolInterfaceCarService;
 import com.jongs.protocolCarStore.Protocol;
@@ -22,6 +23,8 @@ public class CarStoreServer {
         ProtocolInterfaceCarService serverCar;
         boolean connectUserService = false;
         boolean connectCarService = false;
+        Scanner snc = new Scanner(System.in);
+
         try {
             serverUser = null;
             serverCar = null;
@@ -30,8 +33,10 @@ public class CarStoreServer {
             System.out.println("-----------------------------------");
             while (!connectUserService) {
                 try {
+                    System.out.println("Qual o ip do server do serviceUser?");
+                    serverUserName = snc.nextLine();
                     System.out.println("try connect in user service...");
-                    serverUser = (ProtocolInterfaceUserService) Naming.lookup(serverUserName);
+                    serverUser = (ProtocolInterfaceUserService) Naming.lookup("rmi://" + serverUserName +":8083/carStoreUser");
                     connectUserService = true;
                     System.out.println("connected in user service.");
                     System.out.println("-----------------------------------");
@@ -50,8 +55,10 @@ public class CarStoreServer {
 
             while (!connectCarService) {
                 try {
+                    System.out.println("Qual o ip do server do serviceCar?");
+                    serverCarName = snc.nextLine();
                     System.out.println("try connect in car service...");
-                    serverCar = (ProtocolInterfaceCarService) Naming.lookup(serverCarName);
+                    serverCar = (ProtocolInterfaceCarService) Naming.lookup("rmi://" + serverCarName + ":8089/carStoreCar");
                     connectCarService = true;
                     System.out.println("connected in car service.");
                     System.out.println("-----------------------------------");

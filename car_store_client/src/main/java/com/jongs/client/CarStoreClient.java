@@ -14,9 +14,21 @@ public class CarStoreClient {
 
     public static void main(String[] args) throws UnknownHostException, IOException, NotBoundException {
         //definindo endereço do servidor
-        String name = "rmi://localhost:8085/carStore";
+        ProtocolInterfaceCarStore server = null;
+        boolean connection = false;
         //Procurando servidor no endereço
-        ProtocolInterfaceCarStore server = (ProtocolInterfaceCarStore) Naming.lookup(name);
+                do {
+            System.out.println("Digite o ip do servidor. Exemplo: 10.0.0.157");
+            String ipServer = scn.nextLine();
+            try {
+                String name = "rmi://"+ ipServer +"8085/carStore";
+                server = (ProtocolInterfaceCarStore) Naming.lookup(name);
+                connection = true;
+            } catch (Exception e) {
+                System.out.println("Erro ao conectar com o servidor, tente novamente");
+                connection = false;
+            }
+        } while (!connection);
         
         int option = 50;
         try {

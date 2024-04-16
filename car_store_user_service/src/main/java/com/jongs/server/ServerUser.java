@@ -5,6 +5,7 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
+import java.util.Scanner;
 
 import com.jongs.protocolUserDb.ProtocolInterfaceUserBd;
 import com.jongs.protocolUserService.Protocol;
@@ -12,11 +13,11 @@ import com.jongs.protocolUserService.ProtocolInterfaceUserService;
 
 
 public class ServerUser implements Runnable {
-    private static final String serverDbName = "rmi://localhost:8080/userDb";
-    private static final String name = "rmi://localhost:8083/carStoreUser";
+    private String serverDbName;
+    private String name = "rmi://localhost:8083/carStoreUser";
     private boolean connected = false;
     private ProtocolInterfaceUserBd serverDb;
-    
+    private Scanner snc = new Scanner(System.in);
 
     @Override
     public void run() {
@@ -36,7 +37,9 @@ public class ServerUser implements Runnable {
                 System.out.println("Trying to connect to the server db...");
                 while (!connected) {
                     try {
-                        serverDb = (ProtocolInterfaceUserBd) Naming.lookup(serverDbName);
+                        System.out.println("Qual o ip do server db?");
+                        serverDbName = snc.nextLine();
+                        serverDb = (ProtocolInterfaceUserBd) Naming.lookup("rmi://" + serverDbName +":8080/userDb");
                         System.out.println("Connected to the server db.");
                         connected = true;
                     } catch (Exception e) {
@@ -68,7 +71,7 @@ public class ServerUser implements Runnable {
                         connected = false;
                         while (!connected) {
                             try {
-                                serverDb = (ProtocolInterfaceUserBd) Naming.lookup(serverDbName);
+                                serverDb = (ProtocolInterfaceUserBd) Naming.lookup("rmi://" + serverDbName +":8080/userDb");
                                 protocol = new Protocol(serverDb);
                                 Naming.rebind(name, protocol);
                                 connected = true;

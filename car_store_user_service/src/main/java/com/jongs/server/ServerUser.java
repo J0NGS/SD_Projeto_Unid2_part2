@@ -16,7 +16,6 @@ public class ServerUser implements Runnable {
     private String serverDbName;
     private String name = "rmi://localhost:8083/carStoreUser";
     private boolean connected = false;
-    private ProtocolInterfaceUserBd serverDb;
     private Scanner snc = new Scanner(System.in);
 
     @Override
@@ -35,6 +34,7 @@ public class ServerUser implements Runnable {
                         "");
                 System.out.println("--------------------------------------------");
                 System.out.println("Trying to connect to the server db...");
+                ProtocolInterfaceUserBd serverDb = null;
                 while (!connected) {
                     try {
                         System.out.println("Qual o ip do server db?");
@@ -52,8 +52,6 @@ public class ServerUser implements Runnable {
 
                 //Protocolo implementado
                 ProtocolInterfaceUserService protocol = new Protocol(serverDb);
-                //Endereço
-
                 LocateRegistry.createRegistry(8083);
                 //Registrando e associando o protocolo
                 Naming.rebind(name, protocol);
@@ -61,11 +59,9 @@ public class ServerUser implements Runnable {
                 System.out.println("Started user service");
                 System.out.println("Waiting for requests...");
                 System.out.println("--------------------------------------------");
-
-                // Loop infinito para manter o serviço em execução
                 while (true) {
                     try {
-                        protocol.ping();
+                        serverDb.ping();
                     } catch (Exception e) {
                         System.out.println("Failed to connect to the server db. Retrying in 1 seconds...");
                         connected = false;
@@ -73,8 +69,8 @@ public class ServerUser implements Runnable {
                             try {
                                 serverDb = (ProtocolInterfaceUserBd) Naming.lookup("rmi://" + serverDbName +":8080/userDb");
                                 protocol = new Protocol(serverDb);
-                                Naming.rebind(name, protocol);
                                 connected = true;
+                                Naming.rebind(name, protocol);
                                 System.out.println("Connected to the server db.");
                             } catch (Exception e2) {
                                 System.out.println("Failed to connect to the server db. Retrying in 1 second...");

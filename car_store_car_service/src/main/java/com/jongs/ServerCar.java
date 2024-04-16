@@ -73,7 +73,7 @@ public class ServerCar implements Runnable {
                         connected = false;
                         while (!connected) {
                             try {
-                                serverDb = (ProtocolInterfaceCarBd) Naming.lookup(serverDbName);
+                                serverDb = (ProtocolInterfaceCarBd) Naming.lookup("rmi://" + serverDbName +":8082/carDb");
                                 protocol = new Protocol(serverDb);
                                 connected = true;
                                 Naming.rebind(name, protocol);

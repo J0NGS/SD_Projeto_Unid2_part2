@@ -17,10 +17,14 @@ import com.jongs.protocolUserService.ProtocolInterfaceUserService;
 public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCarStore, Serializable {
     ProtocolInterfaceUserService userService;
     ProtocolInterfaceCarService carService;
+    String carServiceIp;
+    String userServiceIp;
 
-    public Protocol(ProtocolInterfaceUserService userService, ProtocolInterfaceCarService carService) throws RemoteException {
+    public Protocol(ProtocolInterfaceUserService userService, ProtocolInterfaceCarService carService, String carServiceIp, String userServiceIp) throws RemoteException {
         this.userService = userService;
         this.carService = carService;
+        this.carServiceIp = carServiceIp;
+        this.userServiceIp = userServiceIp;
     }
 
     @Override
@@ -227,8 +231,8 @@ public class Protocol extends UnicastRemoteObject implements ProtocolInterfaceCa
     private void restartServer(){
         try {
             System.out.println("Atualizando conexão");
-            this.userService = (ProtocolInterfaceUserService) Naming.lookup("rmi://localhost:8083/carStoreUser");
-            this.carService = (ProtocolInterfaceCarService) Naming.lookup("rmi://localhost:8089/carStoreCar");
+            this.userService = (ProtocolInterfaceUserService) Naming.lookup("rmi://" + userServiceIp + ":8083/carStoreUser");
+            this.carService = (ProtocolInterfaceCarService) Naming.lookup("rmi://" + carServiceIp + ":8089/carStoreCar");
             System.out.println("Conexões atualizadas, tente novamente");
         } catch (MalformedURLException | RemoteException | NotBoundException e) {
             System.out.println("Não foi possivel se reconectar ao servidor, tente mais tarde");

@@ -17,8 +17,8 @@ import com.jongs.protocolUserService.ProtocolInterfaceUserService;
 
 public class CarStoreServer {
     public static void main(String[] args) throws IOException {
-        String serverUserName = "rmi://localhost:8083/carStoreUser";
-        String serverCarName = "rmi://localhost:8089/carStoreCar";
+        String serverUserName = "";
+        String serverCarName = "";
         ProtocolInterfaceUserService serverUser;
         ProtocolInterfaceCarService serverCar;
         boolean connectUserService = false;
@@ -74,7 +74,7 @@ public class CarStoreServer {
             System.out.println();
 
             // Protocolo implementado
-            ProtocolInterfaceCarStore protocol = new Protocol(serverUser, serverCar);
+            ProtocolInterfaceCarStore protocol = new Protocol(serverUser, serverCar, serverCarName, serverUserName);
             // Endereço
             String name = "rmi://localhost:8085/carStore";
 
@@ -95,7 +95,7 @@ public class CarStoreServer {
                         try {
                             System.out.println("try connect in car service...");
                             serverCar = (ProtocolInterfaceCarService) Naming.lookup("rmi://" + serverCarName + ":8089/carStoreCar");
-                            protocol = new Protocol(serverUser, serverCar);
+                            protocol = new Protocol(serverUser, serverCar, serverCarName, serverUserName);
                             connectCarService = true;
                             Naming.rebind(name, protocol);
                         } catch (Exception e2) {
@@ -113,7 +113,7 @@ public class CarStoreServer {
                         try {
                             System.out.println("try connect in user service...");
                             serverUser = (ProtocolInterfaceUserService) Naming.lookup("rmi://" + serverUserName +":8083/carStoreUser");
-                            protocol = new Protocol(serverUser, serverCar);
+                            protocol = new Protocol(serverUser, serverCar, serverCarName, serverUserName);
                             connectUserService = true;
                             Naming.rebind(name, protocol);
                         } catch (Exception e2) {
